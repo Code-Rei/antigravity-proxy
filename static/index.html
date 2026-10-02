@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Antigravity Proxy &bull; Nano Banana 2 & Multi-Account AI Hub</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <div class="background-glow"></div>
+  
+  <div class="app-layout">
+    <!-- Header -->
+    <header class="navbar">
+      <div class="brand">
+        <div class="logo-icon">🍌</div>
+        <div class="brand-text">
+          <h1>Antigravity Proxy</h1>
+          <span class="badge">v1.0 &bull; Nano Banana 2 Active</span>
+        </div>
+      </div>
+      <div class="nav-actions">
+        <a href="/oauth/start" class="btn btn-primary" id="connectAccountBtn">
+          <span class="icon">+</span> Connect Google Account
+        </a>
+      </div>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <nav class="tabs-nav">
+      <button class="tab-btn active" data-tab="accounts">
+        <span class="tab-icon">👤</span> Accounts & Health
+      </button>
+      <button class="tab-btn" data-tab="images">
+        <span class="tab-icon">🎨</span> Nano Banana 2 Playground
+      </button>
+      <button class="tab-btn" data-tab="chat">
+        <span class="tab-icon">💬</span> Chat Playground
+      </button>
+      <button class="tab-btn" data-tab="docs">
+        <span class="tab-icon">🔌</span> API Endpoints
+      </button>
+    </nav>
+
+    <!-- Tab 1: Accounts -->
+    <section class="tab-content active" id="tab-accounts">
+      <div class="section-header">
+        <div>
+          <h2>Connected Google Accounts</h2>
+          <p class="subtitle">Automatic rotation, quota failover, and token management across sandbox and autopush backends.</p>
+        </div>
+        <div class="header-actions">
+          <button class="btn btn-secondary" id="resetAccountsBtn">Reset Cooldowns</button>
+          <button class="btn btn-secondary" id="refreshAccountsBtn">Refresh</button>
+        </div>
+      </div>
+
+      <div class="accounts-grid" id="accountsList">
+        <div class="card loading-card">Loading accounts...</div>
+      </div>
+    </section>
+
+    <!-- Tab 2: Nano Banana 2 Images -->
+    <section class="tab-content" id="tab-images">
+      <div class="section-header">
+        <div>
+          <h2>Nano Banana 2 Image Generation</h2>
+          <p class="subtitle">Test the <code>/v1/images/generations</code> endpoint backed by Antigravity's native <code>gemini-3-pro-image</code> engine.</p>
+        </div>
+      </div>
+
+      <div class="playground-container">
+        <div class="controls-panel card">
+          <div class="form-group">
+            <label for="imgPrompt">Image Description (Prompt)</label>
+            <textarea id="imgPrompt" rows="4" placeholder="e.g. A hyper-detailed futuristic cyberpunk city in torrential rain, neon reflections, cinematic lighting, 8k resolution"></textarea>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="imgModel">Model</label>
+              <select id="imgModel">
+                <option value="nano-banana-2" selected>nano-banana-2 (Gemini 3 Pro Image)</option>
+                <option value="gemini-3-pro-image">gemini-3-pro-image</option>
+                <option value="imagen-3">imagen-3</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="imgRatio">Aspect Ratio</label>
+              <select id="imgRatio">
+                <option value="1:1" selected>1:1 (Square)</option>
+                <option value="16:9">16:9 (Landscape HD)</option>
+                <option value="9:16">9:16 (Portrait / Mobile)</option>
+                <option value="4:3">4:3 (Classic Landscape)</option>
+                <option value="3:4">3:4 (Classic Portrait)</option>
+                <option value="21:9">21:9 (Ultrawide Cinematic)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="imgFormat">Response Format</label>
+              <select id="imgFormat">
+                <option value="url" selected>Local URL (Saved to disk)</option>
+                <option value="b64_json">Base64 JSON</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="imgCount">Quantity</label>
+              <input type="number" id="imgCount" value="1" min="1" max="4">
+            </div>
+          </div>
+
+          <button class="btn btn-primary btn-block" id="generateImgBtn">
+            <span class="btn-spinner hidden" id="imgSpinner"></span>
+            <span id="imgBtnText">✨ Generate with Nano Banana 2</span>
+          </button>
+        </div>
+
+        <div class="preview-panel card">
+          <div class="preview-header">
+            <h3>Generated Output</h3>
+            <span class="tag" id="generationStatus">Idle</span>
+          </div>
+          <div class="preview-viewport" id="imagePreviewViewport">
+            <div class="placeholder-content">
+              <div class="placeholder-icon">🖼️</div>
+              <p>Your generated images will appear here</p>
+              <span class="hint">Compatible with standard OpenAI <code>/v1/images/generations</code></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tab 3: Chat Playground -->
+    <section class="tab-content" id="tab-chat">
+      <div class="section-header">
+        <div>
+          <h2>Chat & Thinking Playground</h2>
+          <p class="subtitle">Interact with Gemini 3 Pro/Flash and Claude Sonnet/Opus models via <code>/v1/chat/completions</code>.</p>
+        </div>
+      </div>
+
+      <div class="chat-container card">
+        <div class="chat-settings-bar">
+          <label for="chatModel">Model:</label>
+          <select id="chatModel">
+            <option value="gemini-3-pro-high" selected>gemini-3-pro-high (Deep Thinking)</option>
+            <option value="gemini-3.1-pro-high">gemini-3.1-pro-high</option>
+            <option value="gemini-3-flash">gemini-3-flash (Ultra Fast)</option>
+            <option value="claude-sonnet-4-6-thinking">claude-sonnet-4-6-thinking</option>
+            <option value="claude-opus-4-6-thinking">claude-opus-4-6-thinking</option>
+            <option value="nano-banana-2">nano-banana-2 (Image in Chat)</option>
+          </select>
+        </div>
+
+        <div class="chat-messages" id="chatMessages">
+          <div class="message assistant">
+            <div class="message-bubble">Hello! I am ready to test chat completions and thinking models through your Antigravity proxy.</div>
+          </div>
+        </div>
+
+        <div class="chat-input-row">
+          <textarea id="chatInput" placeholder="Type a message or image prompt..." rows="1"></textarea>
+          <button class="btn btn-primary" id="sendChatBtn">Send</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tab 4: API Docs & Setup -->
+    <section class="tab-content" id="tab-docs">
+      <div class="section-header">
+        <div>
+          <h2>API Usage & Client Integration</h2>
+          <p class="subtitle">Use this proxy with Cursor, OpenCode, VS Code, Python SDK, or cURL.</p>
+        </div>
+      </div>
+
+      <div class="docs-grid">
+        <div class="card">
+          <h3>OpenAI SDK (Python) - Nano Banana 2</h3>
+          <pre><code>from openai import OpenAI
+
+client = OpenAI(
+    base_url="http://localhost:8000/v1",
+    api_key="sk-antigravity"
+)
+
+# Generate with Nano Banana 2
+response = client.images.generate(
+    model="nano-banana-2",
+    prompt="A futuristic glass skyscraper in a lush forest",
+    size="1024x1024",
+    response_format="url" # or "b64_json"
+)
+
+print(response.data[0].url)</code></pre>
+        </div>
+
+        <div class="card">
+          <h3>Cursor / OpenCode / VS Code Setup</h3>
+          <p>Configure custom OpenAI Base URL in your editor settings:</p>
+          <div class="config-table">
+            <div class="config-row">
+              <strong>OpenAI Base URL:</strong>
+              <code>http://localhost:8000/v1</code>
+            </div>
+            <div class="config-row">
+              <strong>API Key:</strong>
+              <code>sk-antigravity (any string)</code>
+            </div>
+            <div class="config-row">
+              <strong>Image Generation Endpoint:</strong>
+              <code>http://localhost:8000/v1/images/generations</code>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
