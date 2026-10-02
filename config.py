@@ -39,11 +39,9 @@ ANTIGRAVITY_SCOPES = [
     "https://www.googleapis.com/auth/experimentsandconfigs",
 ]
 
-# Endpoints in priority fallback order (production first, then sandboxes)
+# Endpoints in priority order (production endpoint for consumer Google accounts)
 SANDBOX_ENDPOINTS = [
     "https://cloudcode-pa.googleapis.com",
-    "https://daily-cloudcode-pa.sandbox.googleapis.com",
-    "https://autopush-cloudcode-pa.sandbox.googleapis.com",
 ]
 
 DEFAULT_PROJECT_ID = "aicode-consumers"

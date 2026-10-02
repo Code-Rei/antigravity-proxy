@@ -24,9 +24,9 @@ def resolve_target_model(model: str) -> str:
     m = re.sub(r"^antigravity-", "", m)
     m = re.sub(r"^gemini-claude-", "claude-", m)
 
-    # Image models
-    if any(k in m for k in ["banana", "gemini-3-pro-image", "imagen", "dall-e"]):
-        return "gemini-3-pro-image"
+    # Image models (Nano Banana 2 is backed by gemini-3.1-flash-image)
+    if any(k in m for k in ["banana", "gemini-3-pro-image", "imagen", "dall-e", "gemini-3.1-flash-image"]):
+        return "gemini-3.1-flash-image"
 
     # Claude models
     if "claude" in m:
@@ -40,17 +40,13 @@ def resolve_target_model(model: str) -> str:
             return "claude-3-5-haiku-20241022"
         return "claude-sonnet-4-6-thinking"
 
-    # Gemini 3
+    # Gemini 3 (Google upgraded gemini-3-pro to gemini-3.1-pro)
     if "gemini-3" in m:
-        if "3.1" in m:
-            if "low" in m:
-                return "gemini-3.1-pro-low"
-            return "gemini-3.1-pro-high"
         if "flash" in m:
             return "gemini-3-flash"
         if "low" in m:
-            return "gemini-3-pro-low"
-        return "gemini-3-pro-high"
+            return "gemini-3.1-pro-low"
+        return "gemini-3.1-pro-high"
 
     # Gemini 2.5
     if "gemini-2.5" in m:

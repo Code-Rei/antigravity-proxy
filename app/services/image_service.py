@@ -74,7 +74,7 @@ async def generate_nano_banana_image(
 
     for attempt in range(max_attempts):
         account = await account_manager.get_best_account(
-            model="gemini-3-pro-image",
+            model="gemini-3.1-flash-image",
             excluded_emails=tried_emails,
             respect_cooldown=True
         )
@@ -82,7 +82,7 @@ async def generate_nano_banana_image(
         if not account:
             # Try without cooldown if accounts exhausted
             account = await account_manager.get_best_account(
-                model="gemini-3-pro-image",
+                model="gemini-3.1-flash-image",
                 excluded_emails=[],
                 respect_cooldown=False
             )
@@ -201,11 +201,12 @@ async def generate_nano_banana_image(
                         err_text = resp.text
                         parsed = parse_google_error(resp.status_code, err_text)
                         print(f"[NanoBanana2] Error {resp.status_code} ({parsed.reason}) from {account.email}: {err_text[:300]}")
-                        last_error = f"{parsed.reason}: {parsed.message}"
                         if resp.status_code == 429:
-                            account_manager.mark_cooldown(account.email, parsed.retry_delay or 60.0, "gemini-3-pro-image")
+                            account_manager.mark_cooldown(account.email, parsed.retry_delay or 60.0, "gemini-3.1-flash-image")
+                            last_error = f"Google Cloud Code Quota/Rate Limit (429): {parsed.message}"
                             break # Move to next account on rate limit
                         else:
+                            last_error = f"{parsed.reason}: {parsed.message}"
                             account_manager.update_usage(account.email, success=False)
 
                 except Exception as e:

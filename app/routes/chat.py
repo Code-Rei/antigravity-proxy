@@ -27,7 +27,7 @@ async def chat_completions(request: Request):
     target_model = resolve_target_model(raw_model)
 
     # Check if this is an image model called via chat completions
-    if target_model == "gemini-3-pro-image":
+    if target_model in ["gemini-3.1-flash-image", "gemini-3-pro-image", "nano-banana-2"]:
         messages = openai_body.get("messages", [])
         prompt = ""
         for m in reversed(messages):
@@ -129,6 +129,9 @@ async def chat_completions(request: Request):
                         print(f"[Chat] Error {resp.status_code} ({parsed.reason}) from {account.email}: {parsed.message}")
                         if resp.status_code == 429:
                             account_manager.mark_cooldown(account.email, parsed.retry_delay or 60.0, target_model)
+                            last_error = f"Google Cloud Code Quota/Rate Limit (429): {parsed.message}"
+                            break
+                        last_error = f"{parsed.reason}: {parsed.message}"
                         continue
 
                     # Successful stream
@@ -262,6 +265,8 @@ async def chat_completions(request: Request):
                         last_error = f"{parsed.reason}: {parsed.message}"
                         if resp.status_code == 429:
                             account_manager.mark_cooldown(account.email, parsed.retry_delay or 60.0, target_model)
+                            last_error = f"Google Cloud Code Quota/Rate Limit (429): {parsed.message}"
+                            break
                         else:
                             account_manager.update_usage(account.email, success=False)
 

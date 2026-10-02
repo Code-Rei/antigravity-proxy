@@ -18,11 +18,12 @@ class TestAntigravityProxy(unittest.TestCase):
         self.assertEqual(resolve_aspect_ratio(None), "1:1")
 
     def test_model_resolution(self):
-        self.assertEqual(resolve_target_model("nano-banana-2"), "gemini-3-pro-image")
-        self.assertEqual(resolve_target_model("gemini-3-pro-image"), "gemini-3-pro-image")
+        self.assertEqual(resolve_target_model("nano-banana-2"), "gemini-3.1-flash-image")
+        self.assertEqual(resolve_target_model("gemini-3-pro-image"), "gemini-3.1-flash-image")
         self.assertEqual(resolve_target_model("claude-sonnet-4-6"), "claude-sonnet-4-6-thinking")
         self.assertEqual(resolve_target_model("gemini-3-flash"), "gemini-3-flash")
-        self.assertEqual(resolve_target_model("gemini-3-pro-low"), "gemini-3-pro-low")
+        self.assertEqual(resolve_target_model("gemini-3-pro-low"), "gemini-3.1-pro-low")
+        self.assertEqual(resolve_target_model("gemini-3-pro-high"), "gemini-3.1-pro-high")
 
     def test_models_endpoint(self):
         response = self.client.get("/v1/models")
@@ -52,7 +53,7 @@ class TestAntigravityProxy(unittest.TestCase):
         }
         google_body = transform_to_google_body(openai_req, project_id="test-proj")
         self.assertEqual(google_body["project"], "test-proj")
-        self.assertEqual(google_body["model"], "gemini-3-pro-high")
+        self.assertEqual(google_body["model"], "gemini-3.1-pro-high")
         self.assertIn("request", google_body)
         req = google_body["request"]
         self.assertIn("generationConfig", req)
