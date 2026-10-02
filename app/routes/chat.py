@@ -147,7 +147,7 @@ async def chat_completions(request: Request):
                                         continue
                                     try:
                                         chunk_json = json.loads(data_str)
-                                        cands = chunk_json.get("candidates", [])
+                                        cands = chunk_json.get("response", {}).get("candidates") or chunk_json.get("candidates", [])
                                         for cand in cands:
                                             parts = cand.get("content", {}).get("parts", [])
                                             text_delta = ""
@@ -206,7 +206,7 @@ async def chat_completions(request: Request):
                     if resp.status_code == 200:
                         account_manager.update_usage(account.email, success=True, tokens=100)
                         data = resp.json()
-                        candidates = data.get("candidates", [])
+                        candidates = data.get("response", {}).get("candidates") or data.get("candidates", [])
                         full_content = ""
                         reasoning_content = ""
                         tool_calls = []

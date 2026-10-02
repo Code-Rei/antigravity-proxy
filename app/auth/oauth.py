@@ -69,7 +69,7 @@ async def discover_project_id(access_token: str) -> str:
     payload = {
         "metadata": {
             "ideType": "ANTIGRAVITY",
-            "platform": "WINDOWS",
+            "platform": "PLATFORM_UNSPECIFIED",
             "pluginType": "GEMINI"
         }
     }

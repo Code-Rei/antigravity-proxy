@@ -53,10 +53,12 @@ class TestAntigravityProxy(unittest.TestCase):
         google_body = transform_to_google_body(openai_req, project_id="test-proj")
         self.assertEqual(google_body["project"], "test-proj")
         self.assertEqual(google_body["model"], "gemini-3-pro-high")
-        self.assertIn("generationConfig", google_body)
-        self.assertEqual(google_body["generationConfig"]["thinkingConfig"]["thinkingLevel"], "high")
-        self.assertEqual(len(google_body["contents"]), 1)
-        self.assertEqual(google_body["contents"][0]["role"], "user")
+        self.assertIn("request", google_body)
+        req = google_body["request"]
+        self.assertIn("generationConfig", req)
+        self.assertEqual(req["generationConfig"]["thinkingConfig"]["thinkingLevel"], "high")
+        self.assertEqual(len(req["contents"]), 1)
+        self.assertEqual(req["contents"][0]["role"], "user")
 
 if __name__ == "__main__":
     unittest.main()

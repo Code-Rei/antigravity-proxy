@@ -194,9 +194,7 @@ def transform_to_google_body(
         if "gemini-3" not in target_model:
             generation_config["thinkingConfig"]["thinkingBudget"] = 32768 if tier == "high" else 16000
 
-    google_body: Dict[str, Any] = {
-        "project": project_id,
-        "model": target_model,
+    inner_request: Dict[str, Any] = {
         "contents": contents,
         "systemInstruction": system_instruction,
         "generationConfig": generation_config,
@@ -206,7 +204,6 @@ def transform_to_google_body(
             {"category": "HARM_CATEGORY_SEXUALLY_EXPLICIT", "threshold": "BLOCK_NONE"},
             {"category": "HARM_CATEGORY_DANGEROUS_CONTENT", "threshold": "BLOCK_NONE"}
         ],
-        "sessionId": session_id or str(uuid.uuid4())
     }
 
     # Tools
@@ -221,9 +218,15 @@ def transform_to_google_body(
                 "parameters": clean_json_schema(fn.get("parameters", {}))
             })
         if func_declarations:
-            google_body["tools"] = [{"functionDeclarations": func_declarations}]
+            inner_request["tools"] = [{"functionDeclarations": func_declarations}]
             if "claude" in target_model:
-                google_body["toolConfig"] = {"functionCallingConfig": {"mode": "VALIDATED"}}
+                inner_request["toolConfig"] = {"functionCallingConfig": {"mode": "VALIDATED"}}
+
+    google_body: Dict[str, Any] = {
+        "project": project_id,
+        "model": target_model,
+        "request": inner_request
+    }
 
     return google_body
 

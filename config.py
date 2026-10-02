@@ -39,14 +39,14 @@ ANTIGRAVITY_SCOPES = [
     "https://www.googleapis.com/auth/experimentsandconfigs",
 ]
 
-# Endpoints in priority fallback order
+# Endpoints in priority fallback order (production first, then sandboxes)
 SANDBOX_ENDPOINTS = [
+    "https://cloudcode-pa.googleapis.com",
     "https://daily-cloudcode-pa.sandbox.googleapis.com",
     "https://autopush-cloudcode-pa.sandbox.googleapis.com",
-    "https://cloudcode-pa.googleapis.com",
 ]
 
-DEFAULT_PROJECT_ID = "rising-fact-p41fc"
+DEFAULT_PROJECT_ID = "aicode-consumers"
 ANTIGRAVITY_VERSION = "1.18.3"
 
 # Port & Host
@@ -59,6 +59,7 @@ REDIRECT_URI = f"{BASE_URL}/oauth-callback"
 IMAGE_MODELS = [
     "nano-banana-2",
     "nano-banana",
+    "gemini-3.1-flash-image",
     "gemini-3-pro-image",
     "gemini-3-pro-image-preview",
     "imagen-3",
