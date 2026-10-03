@@ -154,6 +154,7 @@ class AccountManager:
                 break
 
     def reset_all_accounts(self):
+        self.load_accounts()
         for acc in self.accounts:
             acc.health_score = 100
             acc.consecutive_failures = 0
